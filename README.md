@@ -1,7 +1,7 @@
 <div align="center">
   <h1>[BETA] Agones Tic-Tac-Toe Front-end</h1>
   <p>Multiplayer Tic-Tac-Toe, made with Next.js.</p>
-  <p>Project structure by <a href="https://theodorusclarence.com">Theodorus Clarence</a></p>
+  <p>Generated from <a href="https://github.com/theodorusclarence/ts-nextjs-tailwind-starter">ts-nextjs-tailwind-starter</a> by <a href="https://theodorusclarence.com/">Theodorus Clarence</a></p>
 </div>
 
 ## Features
