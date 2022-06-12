@@ -13,7 +13,7 @@ export default function HomePage() {
         </div>
         <div className='mt-2 text-center'>or</div>
         <div className='mt-2 justify-center'>
-          <input type='text' className='w-24' placeholder='Game ID' />
+          <input type='tel' className='w-24' placeholder='Game ID' />
           <button className='mx-2 border-2 px-2'>Join a game</button>
         </div>
       </div>
