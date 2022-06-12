@@ -3,23 +3,19 @@ import * as React from 'react';
 export default function HomePage() {
   return (
     <main>
-      <div className='layout flex min-h-screen flex-col justify-center text-center'>
-        {[0, 1, 2].map((row) => (
-          <div key={row} className='flex flex-row justify-center'>
-            {[0, 1, 2].map((col) => (
-              <button
-                key={row + '|' + col}
-                className='h-20 w-20 items-center justify-center border-2 border-solid text-center'
-                id={row + '|' + col}
-                onClick={(e) => {
-                  alert(e.currentTarget.id);
-                }}
-              >
-                <h3 className='text-xl'>XO</h3>
-              </button>
-            ))}
-          </div>
-        ))}
+      <div className='layout flex min-h-screen flex-col items-center justify-center'>
+        <div className='mb-4'>
+          <h1>Welcome to Agones Tic-Tac-Toe!</h1>
+        </div>
+
+        <div className='justify-center'>
+          <button className='mx-2 border-2 px-2 text-center'>Create a game</button>
+        </div>
+        <div className='mt-2 text-center'>or</div>
+        <div className='mt-2 justify-center'>
+          <input type='text' className='w-24' placeholder='Game ID' />
+          <button className='mx-2 border-2 px-2'>Join a game</button>
+        </div>
       </div>
     </main>
   );
