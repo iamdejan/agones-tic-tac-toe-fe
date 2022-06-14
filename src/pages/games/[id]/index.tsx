@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export default function HomePage() {
+export default function GamePage() {
   return (
     <main>
       <div className='layout flex min-h-screen flex-col justify-center text-center'>
