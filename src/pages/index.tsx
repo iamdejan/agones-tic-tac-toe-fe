@@ -2,7 +2,11 @@ import axios from 'axios';
 import * as React from 'react';
 
 export default function HomePage() {
+  const [disabled, setDisabled] = React.useState<boolean>(false);
+
   async function createAndJoinGame() {
+    setDisabled(true);
+
     const gameId = await createGame();
     joinGame(gameId);
   }
@@ -36,14 +40,21 @@ export default function HomePage() {
         </div>
 
         <div className='justify-center'>
-          <button className='mx-2 border-2 px-2 text-center' onClick={createAndJoinGame}>
-            Create a game
+          <button
+            disabled={disabled}
+            className='mx-2 rounded border-2 bg-red-600 py-2 px-4 text-center font-bold text-white'
+            onClick={createAndJoinGame}
+          >
+            {!disabled && 'Create a game'}
+            {disabled && 'Loading...'}
           </button>
         </div>
         <div className='mt-2 text-center'>or</div>
         <div className='mt-2 justify-center'>
           <input type='tel' className='w-24' placeholder='Game ID' />
-          <button className='mx-2 border-2 px-2'>Join a game</button>
+          <button className='mx-2 rounded border-2 bg-red-600 py-2 px-4 text-center font-bold text-white'>
+            Join a game
+          </button>
         </div>
       </div>
     </main>
