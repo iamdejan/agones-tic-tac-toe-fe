@@ -1,26 +1,28 @@
+import axios from 'axios';
 import * as React from 'react';
 
 export default function HomePage() {
-  function createAndJoinGame() {
-    const gameId = createGame();
+  async function createAndJoinGame() {
+    const gameId = await createGame();
     joinGame(gameId);
   }
 
-  function createGame(): string {
+  async function createGame(): Promise<string> {
     const serverUrl = createGameServer();
 
-    // TODO dejan: call agones-tic-tac-toe-be-db
-    const gameId = '';
+    // TODO: use env var to store base URL of agones-tic-tac-toe-be-db
+    const { data } = await axios.post('localhost:3002/games', { serverUrl });
+    const gameId = data['gameId'];
 
     return gameId;
   }
 
-  function createGameServer(): string {
-    // TODO: provision Agones in prod or localhost, depends on env var
+  async function createGameServer(): Promise<string> {
+    // TODO: use Agones in prod or use local game server, depends on env var
     return 'localhost:3001';
   }
 
-  function joinGame(gameId: string) {
+  async function joinGame(gameId: string) {
     // TODO dejan:
     //  1) get server url
     //  2) connect to server url
