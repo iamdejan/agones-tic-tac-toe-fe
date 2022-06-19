@@ -9,16 +9,23 @@ export default function HomePage() {
 
     const gameId = await createGame();
     joinGame(gameId);
+
+    setDisabled(false);
   }
 
   async function createGame(): Promise<string> {
-    const serverUrl = createGameServer();
+    console.log('attempting to create game');
+    const serverUrl: string = await createGameServer();
 
     // TODO: use env var to store base URL of agones-tic-tac-toe-be-db
-    const { data } = await axios.post('localhost:3002/games', { serverUrl });
-    const gameId = data['gameId'];
-
-    return gameId;
+    try {
+      const { data } = await axios.post('http://localhost:3002/games', { serverUrl });
+      const gameId = data['gameId'];
+      return gameId;
+    } catch (e) {
+      console.log(e);
+      return '';
+    }
   }
 
   async function createGameServer(): Promise<string> {
