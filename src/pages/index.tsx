@@ -1,34 +1,20 @@
-import mongoose from 'mongoose';
 import { nanoid } from 'nanoid';
 import * as React from 'react';
 
 import GameSchema from '@/models/GameSchema';
 
 import Game from '@/types/Game';
+import MongoUtility from '@/utilities/MongoUtility';
 
 function createGameServer(): string {
   // TODO: provision Agones in prod or localhost, depends on env var
   return 'localhost:3001';
 }
 
-// TODO: refactor into context
-function connectToDatabase() {
-  const username = 'test';
-  const password = 'test';
-  mongoose.connect(
-    `mongodb+srv://${username}:${password}@agonestictactoe.0deyc.mongodb.net/?retryWrites=true&w=majority`,
-    () => {
-      console.log('connected to MongoDB');
-    }
-  );
-}
-
 function createGame(): string {
   const serverUrl = createGameServer();
   const gameId = nanoid();
 
-  connectToDatabase();
-  // TODO dejan: store socket.id into database
   const game: Game = { id: gameId, players: [], serverUrl };
   GameSchema.build(game).save();
 
@@ -56,6 +42,10 @@ function createAndJoinGame() {
 }
 
 export default function HomePage() {
+  React.useEffect(() => {
+    MongoUtility.connectToDatabase();
+  }, []);
+
   return (
     <main>
       <div className='layout flex min-h-screen flex-col items-center justify-center'>
