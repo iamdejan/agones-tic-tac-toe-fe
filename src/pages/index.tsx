@@ -1,8 +1,12 @@
 import axios from 'axios';
 import * as React from 'react';
+import { io, Socket } from 'socket.io-client';
+
+import { useSocket } from '@/context/SocketContext';
 
 export default function HomePage() {
   const [disabled, setDisabled] = React.useState<boolean>(false);
+  const { setSocket } = useSocket();
 
   async function createAndJoinGame() {
     setDisabled(true);
@@ -14,7 +18,6 @@ export default function HomePage() {
   }
 
   async function createGame(): Promise<string> {
-    console.log('attempting to create game');
     const serverUrl: string = await createGameServer();
 
     // TODO: use env var to store base URL of agones-tic-tac-toe-be-db
@@ -30,13 +33,17 @@ export default function HomePage() {
 
   async function createGameServer(): Promise<string> {
     // TODO: use Agones in prod or use local game server, depends on env var
-    return 'localhost:3001';
+    return 'localhost:4000';
   }
 
   async function joinGame(gameId: string) {
-    // TODO dejan:
-    //  1) get server url
-    //  2) connect to server url
+    const { data } = await axios.post(`http://localhost:3002/games/${gameId}`);
+    const serverUrl = data['serverUrl'] as string;
+
+    const socket: Socket = io(serverUrl, {
+      transports: ['websocket'],
+    });
+    setSocket(socket);
   }
 
   return (

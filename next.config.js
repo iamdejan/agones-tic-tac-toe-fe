@@ -5,7 +5,7 @@ module.exports = {
   },
 
   reactStrictMode: true,
- 
+
   // SVGR
   webpack(config) {
     config.module.rules.push({

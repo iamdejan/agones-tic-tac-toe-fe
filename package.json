@@ -26,6 +26,7 @@
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-icons": "^4.4.0",
+    "socket.io-client": "^4.5.1",
     "tailwind-merge": "^1.2.1"
   },
   "devDependencies": {
@@ -58,7 +59,7 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [
-      "eslint --max-warnings=3",
+      "eslint --max-warnings=10",
       "prettier -w"
     ],
     "src/**/*.{json,css,scss,md}": [
