@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as React from 'react';
 import { io, Socket } from 'socket.io-client';
-
+import Router from 'next/router';
 import { useSocket } from '@/context/SocketContext';
 
 export default function HomePage() {
@@ -15,6 +15,8 @@ export default function HomePage() {
     joinGame(gameId);
 
     setDisabled(false);
+
+    Router.push(`/games/${gameId}/loading`);
   }
 
   async function createGame(): Promise<string> {
