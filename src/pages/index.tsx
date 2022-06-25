@@ -1,7 +1,8 @@
 import axios from 'axios';
+import Router from 'next/router';
 import * as React from 'react';
 import { io, Socket } from 'socket.io-client';
-import Router from 'next/router';
+
 import { useSocket } from '@/context/SocketContext';
 
 export default function HomePage() {
