@@ -16,16 +16,16 @@ export default function HomePage() {
     const gameId = await createGame();
     joinGame(gameId);
 
-    setDisabled(false);
     setGameId(gameId);
   }
 
   async function createGame(): Promise<string> {
     const serverUrl: string = await createGameServer();
 
-    // TODO: use env var to store base URL of agones-tic-tac-toe-be-db
     try {
-      const { data } = await axios.post('http://localhost:3002/games', { serverUrl });
+      const { data } = await axios.post(`${process.env.NEXT_PUBLIC_BE_DB_BASE_URL}/games`, {
+        serverUrl,
+      });
       const gameId = data['gameId'];
       return gameId;
     } catch (e) {
@@ -35,7 +35,12 @@ export default function HomePage() {
   }
 
   async function createGameServer(): Promise<string> {
-    // TODO: use Agones in prod or use local game server, depends on env var
+    const useAgones: boolean = process.env.NEXT_PUBLIC_USE_AGONES === 'true';
+    if (useAgones) {
+      // TODO: use Agones in prod or use local game server, depends on env var
+      return '';
+    }
+
     return 'localhost:4000';
   }
 

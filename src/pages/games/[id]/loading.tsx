@@ -27,7 +27,7 @@ export default function LoadingPage() {
     return () => {
       socket?.off('GAME_STARTED');
     };
-  }, [event]);
+  }, [socket, event]);
 
   return (
     <main>
