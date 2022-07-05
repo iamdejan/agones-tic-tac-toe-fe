@@ -3,6 +3,7 @@ import Router from 'next/router';
 import * as React from 'react';
 
 import Spinner from '@/components/Spinner';
+
 import { useSocket } from '@/context/SocketContext';
 
 export default function LoadingPage() {
