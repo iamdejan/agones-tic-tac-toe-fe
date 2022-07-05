@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { Socket } from 'socket.io-client';
 
 interface Context {
@@ -8,10 +8,10 @@ interface Context {
 
 const SocketContext = createContext<Context>({ setSocket: (_: Socket) => {} });
 
-function SocketProvider(): JSX.Element {
+function SocketProvider(props: PropsWithChildren<unknown>): JSX.Element {
   const [socket, setSocket] = useState<Socket>();
 
-  return <SocketContext.Provider value={{ socket, setSocket }} />;
+  return <SocketContext.Provider value={{ socket, setSocket }} {...props} />;
 }
 
 export const useSocket = () => useContext(SocketContext);

@@ -7,7 +7,8 @@ import { useSocket } from '@/context/SocketContext';
 
 export default function HomePage() {
   const [disabled, setDisabled] = React.useState<boolean>(false);
-  const { setSocket } = useSocket();
+  const { socket, setSocket } = useSocket();
+  const [gameId, setGameId] = React.useState<string>();
 
   async function createAndJoinGame() {
     setDisabled(true);
@@ -16,8 +17,7 @@ export default function HomePage() {
     joinGame(gameId);
 
     setDisabled(false);
-
-    Router.push(`/games/${gameId}/loading`);
+    setGameId(gameId);
   }
 
   async function createGame(): Promise<string> {
@@ -46,8 +46,15 @@ export default function HomePage() {
     const socket: Socket = io(serverUrl, {
       transports: ['websocket'],
     });
+    socket.emit('ON_PLAYER_JOINED', {});
     setSocket(socket);
   }
+
+  React.useEffect(() => {
+    if (socket && gameId) {
+      Router.push(`/games/${gameId}/loading`);
+    }
+  }, [socket, gameId]);
 
   return (
     <main>
