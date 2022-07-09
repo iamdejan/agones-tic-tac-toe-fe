@@ -1,10 +1,10 @@
 import axios from 'axios';
 import Router from 'next/router';
 import * as React from 'react';
+import { useState } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 import { useSocket } from '@/context/SocketContext';
-import { useState } from 'react';
 
 export default function HomePage(): JSX.Element {
   const [disabled, setDisabled] = useState<boolean>(false);

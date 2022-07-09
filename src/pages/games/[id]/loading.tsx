@@ -1,12 +1,12 @@
 import { NextRouter, useRouter } from 'next/router';
 import Router from 'next/router';
 import * as React from 'react';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 import Spinner from '@/components/Spinner';
 
 import { useSocket } from '@/context/SocketContext';
-import { useState } from 'react';
-import { useEffect } from 'react';
 
 export default function LoadingPage(): JSX.Element {
   const router: NextRouter = useRouter();
