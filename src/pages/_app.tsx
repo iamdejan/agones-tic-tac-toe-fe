@@ -5,7 +5,7 @@ import '@/styles/colors.css';
 
 import SocketProvider from '@/context/SocketContext';
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <SocketProvider>
       <Component {...pageProps} />

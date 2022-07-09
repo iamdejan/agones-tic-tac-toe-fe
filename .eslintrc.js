@@ -17,6 +17,7 @@ module.exports = {
     'no-console': 'warn',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-empty-function': 'warn',
+    '@typescript-eslint/explicit-function-return-type': 'error',
 
     'react/display-name': 'off',
     'react/jsx-curly-brace-presence': ['warn', { props: 'never', children: 'never' }],
