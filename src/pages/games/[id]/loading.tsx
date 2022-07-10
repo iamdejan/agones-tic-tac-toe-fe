@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import Spinner from '@/components/Spinner';
 
 import { useSocket } from '@/context/SocketContext';
+import logger from '@/utils/logger';
 
 export default function LoadingPage(): JSX.Element {
   const router: NextRouter = useRouter();
@@ -20,7 +21,7 @@ export default function LoadingPage(): JSX.Element {
     }
 
     if (!socket) {
-      console.log('socket is off');
+      logger.error('socket is off');
     }
 
     socket?.on('GAME_STARTED', () => {

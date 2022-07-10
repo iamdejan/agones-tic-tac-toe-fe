@@ -2,9 +2,11 @@ import axios from 'axios';
 import Router from 'next/router';
 import * as React from 'react';
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 import { useSocket } from '@/context/SocketContext';
+import logger from '@/utils/logger';
 
 export default function HomePage(): JSX.Element {
   const [disabled, setDisabled] = useState<boolean>(false);
@@ -30,7 +32,7 @@ export default function HomePage(): JSX.Element {
       const generatedGameId = data['gameId'] as string;
       return generatedGameId;
     } catch (e) {
-      console.log(e);
+      logger.error(e);
       return '';
     }
   }
@@ -63,9 +65,10 @@ export default function HomePage(): JSX.Element {
     };
     const submittedGameId = target.gameId.value;
     await joinGame(submittedGameId);
+    setGameId(submittedGameId);
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (socket && gameId) {
       Router.push(`/games/${gameId}/loading`);
     }
