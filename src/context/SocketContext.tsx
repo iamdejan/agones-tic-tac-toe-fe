@@ -14,6 +14,6 @@ function SocketProvider(props: PropsWithChildren<unknown>): JSX.Element {
   return <SocketContext.Provider value={{ socket, setSocket }} {...props} />;
 }
 
-export const useSocket = () => useContext(SocketContext);
+export const useSocket: () => Context = () => useContext(SocketContext);
 
 export default SocketProvider;

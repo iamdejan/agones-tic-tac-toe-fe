@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export default function Spinner() {
+export default function Spinner(): JSX.Element {
   return (
     <svg
       role='status'

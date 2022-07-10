@@ -1,24 +1,27 @@
 import { NextRouter, useRouter } from 'next/router';
 import Router from 'next/router';
 import * as React from 'react';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 import Spinner from '@/components/Spinner';
 
 import { useSocket } from '@/context/SocketContext';
+import logger from '@/utils/logger';
 
-export default function LoadingPage() {
+export default function LoadingPage(): JSX.Element {
   const router: NextRouter = useRouter();
   const { id: gameId } = router.query;
 
   const { socket } = useSocket();
-  const [event, setEvent] = React.useState<string>();
-  React.useEffect(() => {
+  const [event, setEvent] = useState<string>();
+  useEffect(() => {
     if (event === 'GAME_STARTED') {
       Router.push(`/games/${gameId}`);
     }
 
     if (!socket) {
-      console.log('socket is off');
+      logger.error('socket is off');
     }
 
     socket?.on('GAME_STARTED', () => {

@@ -1,22 +1,25 @@
 import axios from 'axios';
 import Router from 'next/router';
 import * as React from 'react';
+import { useState } from 'react';
+import { useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 
 import { useSocket } from '@/context/SocketContext';
+import logger from '@/utils/logger';
 
-export default function HomePage() {
-  const [disabled, setDisabled] = React.useState<boolean>(false);
+export default function HomePage(): JSX.Element {
+  const [disabled, setDisabled] = useState<boolean>(false);
   const { socket, setSocket } = useSocket();
-  const [gameId, setGameId] = React.useState<string>();
+  const [gameId, setGameId] = useState<string>();
 
-  async function createAndJoinGame() {
+  async function createAndJoinGame(): Promise<void> {
     setDisabled(true);
 
-    const gameId = await createGame();
-    joinGame(gameId);
+    const generatedGameId = await createGame();
+    joinGame(generatedGameId);
 
-    setGameId(gameId);
+    setGameId(generatedGameId);
   }
 
   async function createGame(): Promise<string> {
@@ -26,10 +29,10 @@ export default function HomePage() {
       const { data } = await axios.post(`${process.env.NEXT_PUBLIC_BE_DB_BASE_URL}/games`, {
         serverUrl,
       });
-      const gameId = data['gameId'];
-      return gameId;
+      const generatedGameId = data['gameId'] as string;
+      return generatedGameId;
     } catch (e) {
-      console.log(e);
+      logger.error(e);
       return '';
     }
   }
@@ -44,8 +47,8 @@ export default function HomePage() {
     return 'localhost:4000';
   }
 
-  async function joinGame(gameId: string) {
-    const { data } = await axios.post(`http://localhost:3002/games/${gameId}`);
+  async function joinGame(gameId: string): Promise<void> {
+    const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BE_DB_BASE_URL}/games/${gameId}`);
     const serverUrl = data['serverUrl'] as string;
 
     const socket: Socket = io(serverUrl, {
@@ -55,7 +58,17 @@ export default function HomePage() {
     setSocket(socket);
   }
 
-  React.useEffect(() => {
+  async function handleJoinGame(event: React.FormEvent<unknown>): Promise<void> {
+    event.preventDefault();
+    const target = event.target as typeof event.target & {
+      gameId: { value: string };
+    };
+    const submittedGameId = target.gameId.value;
+    await joinGame(submittedGameId);
+    setGameId(submittedGameId);
+  }
+
+  useEffect(() => {
     if (socket && gameId) {
       Router.push(`/games/${gameId}/loading`);
     }
@@ -80,10 +93,15 @@ export default function HomePage() {
         </div>
         <div className='mt-2 text-center'>or</div>
         <div className='mt-2 justify-center'>
-          <input type='tel' className='w-24' placeholder='Game ID' />
-          <button className='mx-2 rounded border-2 bg-red-600 py-2 px-4 text-center font-bold text-white'>
-            Join a game
-          </button>
+          <form onSubmit={handleJoinGame}>
+            <input id='gameId' type='text' className='w-24' placeholder='Game ID' required />
+            <button
+              type='submit'
+              className='mx-2 rounded border-2 bg-red-600 py-2 px-4 text-center font-bold text-white'
+            >
+              Join a game
+            </button>
+          </form>
         </div>
       </div>
     </main>

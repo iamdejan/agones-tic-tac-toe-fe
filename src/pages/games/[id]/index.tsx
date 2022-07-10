@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export default function GamePage() {
+export default function GamePage(): JSX.Element {
   return (
     <main>
       <div className='layout flex min-h-screen flex-col justify-center text-center'>
@@ -11,7 +11,7 @@ export default function GamePage() {
                 key={row + '|' + col}
                 className='h-20 w-20 items-center justify-center border-2 border-solid text-center'
                 id={row + '|' + col}
-                onClick={(e) => {
+                onClick={(e): void => {
                   alert(e.currentTarget.id);
                 }}
               >
