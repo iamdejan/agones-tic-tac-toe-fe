@@ -9,17 +9,21 @@ interface Player {
   character: string;
 }
 
-interface Move {
+interface Point {
   row: number;
   col: number;
-  character: string;
 }
+
+type Move = Point & {
+  character: string;
+};
 
 export default function GamePage(): JSX.Element {
   const { socket } = useSocket();
+  const [event, setEvent] = useState<string>('');
   const [draw, setDraw] = useState<boolean>();
   const [winner, setWinner] = useState<Player>();
-  const [isMyTurn, setMyTurn] = useState<boolean>();
+  const [isMyTurn, setMyTurn] = useState<boolean>(false);
   const [board, setBoard] = useState<string[][]>([
     ['', '', ''],
     ['', '', ''],
@@ -30,17 +34,33 @@ export default function GamePage(): JSX.Element {
     return board[row][col] !== '';
   }
 
+  function getPoint(id: string): Point {
+    const split: string[] = id.split('|');
+    const row = Number.parseInt(split[0]);
+    const col = Number.parseInt(split[1]);
+    return { row, col };
+  }
+
+  function handleMove(e: React.MouseEvent<HTMLButtonElement, MouseEvent>): void {
+    const point: Point = getPoint(e.currentTarget.id);
+
+    socket?.emit('ON_PLAYER_MOVED', { row: point.row, col: point.col });
+  }
+
   useEffect(() => {
     if (!socket) {
       logger.error('socket is off');
+    } else {
+      logger.info(`socket id = ${socket.id}`);
     }
 
     socket?.on('PLAYER_WINS', ({ player, character }: Player) => {
+      setEvent('PLAYER_WINS');
       setWinner({ player, character });
     });
 
     socket?.on('DRAW', () => {
-      setDraw(true);
+      setEvent('DRAW');
     });
 
     socket?.on('MOVE_COMPLETED', ({ row, col, character }: Move) => {
@@ -50,6 +70,8 @@ export default function GamePage(): JSX.Element {
     });
 
     socket?.on('PLAYER_TURN', ({ player, character }: Player) => {
+      logger.info(player);
+      logger.info(socket.id);
       setMyTurn(player === socket.id);
     });
 
@@ -57,6 +79,7 @@ export default function GamePage(): JSX.Element {
       socket?.off('PLAYER_WINS');
       socket?.off('DRAW');
       socket?.off('MOVE_COMPLETED');
+      socket?.off('PLAYER_TURN');
     };
   }, [socket, draw, winner, board, isMyTurn]);
 
@@ -84,9 +107,7 @@ export default function GamePage(): JSX.Element {
                   className='h-20 w-20 items-center justify-center border-2 border-solid text-center'
                   id={row + '|' + col}
                   disabled={!isMyTurn || isFilled(row, col)}
-                  onClick={(e): void => {
-                    alert(e.currentTarget.id);
-                  }}
+                  onClick={handleMove}
                 >
                   <h3 className='text-xl'>{board[row][col]}</h3>
                 </button>

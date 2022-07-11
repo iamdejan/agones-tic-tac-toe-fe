@@ -94,7 +94,7 @@ export default function HomePage(): JSX.Element {
         <div className='mt-2 text-center'>or</div>
         <div className='mt-2 justify-center'>
           <form onSubmit={handleJoinGame}>
-            <input id='gameId' type='text' className='w-24' placeholder='Game ID' required />
+            <input id='gameId' type='text' className='w-96' placeholder='Game ID' required />
             <button
               type='submit'
               className='mx-2 rounded border-2 bg-red-600 py-2 px-4 text-center font-bold text-white'

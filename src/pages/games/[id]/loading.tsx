@@ -1,7 +1,7 @@
 import { NextRouter, useRouter } from 'next/router';
 import Router from 'next/router';
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import Spinner from '@/components/Spinner';
 
@@ -13,19 +13,24 @@ export default function LoadingPage(): JSX.Element {
   const { id: gameId } = router.query;
 
   const { socket } = useSocket();
+  const [event, setEvent] = useState<string>();
   useEffect(() => {
+    if (event === 'GAME_STARTED') {
+      Router.push(`/games/${gameId}`);
+    }
+
     if (!socket) {
       logger.error('socket is off');
     }
 
     socket?.on('GAME_STARTED', () => {
-      Router.push(`/games/${gameId}`);
+      setEvent('GAME_STARTED');
     });
 
     return () => {
       socket?.off('GAME_STARTED');
     };
-  }, [socket, gameId]);
+  }, [socket, event, gameId]);
 
   return (
     <main>
