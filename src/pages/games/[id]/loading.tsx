@@ -1,10 +1,11 @@
 import { NextRouter, useRouter } from 'next/router';
 import Router from 'next/router';
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 import Spinner from '@/components/Spinner';
 
+import { Player, useEvent } from '@/context/EventContext';
 import { useSocket } from '@/context/SocketContext';
 import logger from '@/utils/logger';
 
@@ -13,24 +14,24 @@ export default function LoadingPage(): JSX.Element {
   const { id: gameId } = router.query;
 
   const { socket } = useSocket();
-  const [event, setEvent] = useState<string>();
+  const { event, setEvent } = useEvent();
   useEffect(() => {
-    if (event === 'GAME_STARTED') {
-      Router.push(`/games/${gameId}`);
-    }
-
     if (!socket) {
       logger.error('socket is off');
     }
 
-    socket?.on('GAME_STARTED', () => {
-      setEvent('GAME_STARTED');
+    socket?.on('GAME_STARTED', ({ player, character }: Player) => {
+      setEvent({ name: 'GAME_STARTED', payload: { player, character, row: -1, col: -1 } });
     });
 
     return () => {
       socket?.off('GAME_STARTED');
     };
   }, [socket, event, gameId]);
+
+  if (event?.name === 'GAME_STARTED') {
+    Router.push(`/games/${gameId}`);
+  }
 
   return (
     <main>

@@ -1,26 +1,13 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 
+import { Move, Player, Point, useEvent } from '@/context/EventContext';
 import { useSocket } from '@/context/SocketContext';
 import logger from '@/utils/logger';
 
-interface Player {
-  player: string;
-  character: string;
-}
-
-interface Point {
-  row: number;
-  col: number;
-}
-
-type Move = Point & {
-  character: string;
-};
-
 export default function GamePage(): JSX.Element {
   const { socket } = useSocket();
-  const [event, setEvent] = useState<string>('');
+  const { event, setEvent } = useEvent();
   const [draw, setDraw] = useState<boolean>();
   const [winner, setWinner] = useState<Player>();
   const [isMyTurn, setMyTurn] = useState<boolean>(false);
@@ -48,6 +35,25 @@ export default function GamePage(): JSX.Element {
   }
 
   useEffect(() => {
+    logger.info(`is my turn? ${isMyTurn}`);
+
+    if (event?.name === 'PLAYER_WINS') {
+      setWinner({ player: event.payload!.player, character: event.payload!.character });
+    } else if (event?.name === 'DRAW') {
+      setDraw(true);
+    } else if (event?.name === 'MOVE_COMPLETED') {
+      const row = event?.payload!.row;
+      const col = event?.payload!.col;
+      const newBoard = board;
+      newBoard[row][col] = event?.payload!.character;
+      setBoard(newBoard);
+    } else if (event?.name === 'GAME_STARTED' || event?.name === 'PLAYER_TURN') {
+      const player = event?.payload!.player;
+      logger.info(`supposed player's turn = ${player}`);
+      logger.info(`local player = ${socket?.id}`);
+      setMyTurn(player === socket?.id);
+    }
+
     if (!socket) {
       logger.error('socket is off');
     } else {
@@ -55,24 +61,19 @@ export default function GamePage(): JSX.Element {
     }
 
     socket?.on('PLAYER_WINS', ({ player, character }: Player) => {
-      setEvent('PLAYER_WINS');
-      setWinner({ player, character });
+      setEvent({ name: 'PLAYER_WINS', payload: { player, character, row: -1, col: -1 } });
     });
 
     socket?.on('DRAW', () => {
-      setEvent('DRAW');
+      setEvent({ name: 'DRAW', payload: undefined });
     });
 
     socket?.on('MOVE_COMPLETED', ({ row, col, character }: Move) => {
-      const newBoard = board;
-      newBoard[row][col] = character;
-      setBoard(newBoard);
+      setEvent({ name: 'MOVE_COMPLETED', payload: { row, col, character, player: '' } });
     });
 
     socket?.on('PLAYER_TURN', ({ player, character }: Player) => {
-      logger.info(player);
-      logger.info(socket.id);
-      setMyTurn(player === socket.id);
+      setEvent({ name: 'PLAYER_TURN', payload: { player, character, row: -1, col: -1 } });
     });
 
     return () => {
@@ -81,7 +82,7 @@ export default function GamePage(): JSX.Element {
       socket?.off('MOVE_COMPLETED');
       socket?.off('PLAYER_TURN');
     };
-  }, [socket, draw, winner, board, isMyTurn]);
+  }, [socket, event, isMyTurn, board, setEvent]);
 
   return (
     <main>
