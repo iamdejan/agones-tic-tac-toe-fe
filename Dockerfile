@@ -1,4 +1,4 @@
-# Set image from base on offical node lts alpine
+# Set image from base on offical node lts
 ARG VERSION=18-bullseye-slim
 FROM node:$VERSION
 
