@@ -21,13 +21,17 @@ export default function LoadingPage(): JSX.Element {
     }
 
     socket?.on('GAME_STARTED', ({ player, character }: Player) => {
+      logger.info('set event to GAME_STARTED');
+
       setEvent({ name: 'GAME_STARTED', payload: { player, character, row: -1, col: -1 } });
     });
 
     return () => {
       socket?.off('GAME_STARTED');
     };
-  }, [socket, event, gameId]);
+  }, [socket, event, gameId, setEvent]);
+
+  logger.info(event);
 
   if (event?.name === 'GAME_STARTED') {
     Router.push(`/games/${gameId}`);

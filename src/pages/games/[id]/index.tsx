@@ -61,18 +61,26 @@ export default function GamePage(): JSX.Element {
     }
 
     socket?.on('PLAYER_WINS', ({ player, character }: Player) => {
+      logger.info('set event to PLAYER_WINS');
+
       setEvent({ name: 'PLAYER_WINS', payload: { player, character, row: -1, col: -1 } });
     });
 
     socket?.on('DRAW', () => {
+      logger.info('set event to DRAW');
+
       setEvent({ name: 'DRAW', payload: undefined });
     });
 
     socket?.on('MOVE_COMPLETED', ({ row, col, character }: Move) => {
+      logger.info('set event to MOVE_COMPLETED');
+
       setEvent({ name: 'MOVE_COMPLETED', payload: { row, col, character, player: '' } });
     });
 
     socket?.on('PLAYER_TURN', ({ player, character }: Player) => {
+      logger.info('set event to PLAYER_TURN');
+
       setEvent({ name: 'PLAYER_TURN', payload: { player, character, row: -1, col: -1 } });
     });
 
@@ -87,15 +95,19 @@ export default function GamePage(): JSX.Element {
   return (
     <main>
       {!draw && winner && (
-        <div className='min-h-screen flex-col items-center justify-center'>
-          <h2>
-            Player {winner.player} (character {winner.character}) WINS!
-          </h2>
+        <div className='flex min-h-screen flex-col items-center justify-center'>
+          <div>
+            <h2>
+              Player {winner.player} (character {winner.character}) WINS!
+            </h2>
+          </div>
         </div>
       )}
       {draw && (
-        <div className='min-h-screen flex-col items-center justify-center'>
-          <h2>Game ends in DRAW!</h2>
+        <div className='flex min-h-screen flex-col items-center justify-center'>
+          <div>
+            <h2>Game ends in DRAW!</h2>
+          </div>
         </div>
       )}
       {!draw && !winner && (

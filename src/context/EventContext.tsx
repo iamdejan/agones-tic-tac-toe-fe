@@ -29,7 +29,9 @@ const EventContext = createContext<Context>({ setEvent: (_: Event) => {} });
 function EventProvider(props: PropsWithChildren<unknown>): JSX.Element {
   const [event, setEvent] = useState<Event>();
 
-  return <EventContext.Provider value={{ event, setEvent }} {...props} />;
+  return (
+    <EventContext.Provider value={{ event, setEvent }}>{props.children}</EventContext.Provider>
+  );
 }
 
 export const useEvent: () => Context = () => useContext(EventContext);

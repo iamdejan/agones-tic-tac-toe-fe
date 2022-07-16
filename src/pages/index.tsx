@@ -54,7 +54,6 @@ export default function HomePage(): JSX.Element {
     const socket: Socket = io(serverUrl, {
       transports: ['websocket'],
     });
-    socket.emit('ON_PLAYER_JOINED', {});
     setSocket(socket);
   }
 
@@ -70,6 +69,9 @@ export default function HomePage(): JSX.Element {
 
   useEffect(() => {
     if (socket && gameId) {
+      logger.info('emitting ON_PLAYER_JOINED and redirecting...');
+
+      socket.emit('ON_PLAYER_JOINED', {});
       Router.push(`/games/${gameId}/loading`);
     }
   }, [socket, gameId]);
