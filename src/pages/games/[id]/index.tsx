@@ -85,10 +85,10 @@ export default function GamePage(): JSX.Element {
     });
 
     return () => {
-      socket?.off('PLAYER_WINS');
-      socket?.off('DRAW');
-      socket?.off('MOVE_COMPLETED');
-      socket?.off('PLAYER_TURN');
+      socket?.removeAllListeners('PLAYER_WINS');
+      socket?.removeAllListeners('DRAW');
+      socket?.removeAllListeners('MOVE_COMPLETED');
+      socket?.removeAllListeners('PLAYER_TURN');
     };
   }, [socket, event, isMyTurn, board, setEvent]);
 

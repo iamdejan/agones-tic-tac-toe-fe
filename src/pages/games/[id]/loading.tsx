@@ -27,7 +27,7 @@ export default function LoadingPage(): JSX.Element {
     });
 
     return () => {
-      socket?.off('GAME_STARTED');
+      socket?.removeAllListeners('GAME_STARTED');
     };
   }, [socket, event, gameId, setEvent]);
 
