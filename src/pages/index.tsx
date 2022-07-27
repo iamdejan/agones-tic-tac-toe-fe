@@ -40,12 +40,13 @@ export default function HomePage(): JSX.Element {
   async function createGameServer(): Promise<string> {
     const useAgones: boolean = process.env.NEXT_PUBLIC_USE_AGONES === 'true';
     if (useAgones) {
-      // TODO: use Agones in prod or use local game server, depends on env var
-      return '';
+      const host = '34.101.231.69';
+      const port = 7225;
+      return `${host}:${port}`;
     }
 
-    const host = '34.101.231.69';
-    const port = 7645;
+    const host = 'localhost';
+    const port = 4000;
     return `${host}:${port}`;
   }
 
