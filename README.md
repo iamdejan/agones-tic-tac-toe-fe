@@ -35,4 +35,10 @@ You can also check all of the **details and demos** on my blog post:
 
 ## Getting Started
 
-TODO
+### Installing Dependencies
+
+Run `yarn install`.
+
+### Running the Project
+
+Run `yarn build && yarn start`.
