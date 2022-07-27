@@ -44,7 +44,9 @@ export default function HomePage(): JSX.Element {
       return '';
     }
 
-    return 'localhost:4000';
+    const host = '34.101.231.69';
+    const port = 7645;
+    return `${host}:${port}`;
   }
 
   async function joinGame(gameId: string): Promise<void> {
